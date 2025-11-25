@@ -3,6 +3,8 @@
 
 body {
   font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
 /* Smooth transitions */
@@ -12,17 +14,17 @@ body {
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
   background: #f1f5f9;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -43,4 +45,23 @@ body {
 /* Hover effects */
 .hover-lift:hover {
   transform: translateY(-2px);
+}
+
+/* Truncate text */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Focus styles */
+button:focus, input:focus {
+  outline: none;
+  ring: 2px;
+}
+
+/* Disabled states */
+button:disabled, input:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
