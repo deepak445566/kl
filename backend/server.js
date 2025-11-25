@@ -19,7 +19,7 @@ mongoose.connect(MONGODB_URI)
   .then(() => console.log('✅ MongoDB Connected'))
   .catch(err => console.log('❌ MongoDB Connection Error:', err.message));
 
-// MongoDB Schemas (same as before)
+// MongoDB Schemas
 const urlRequestSchema = new mongoose.Schema({
   requestId: { type: String, required: true, unique: true },
   url: { type: String },
@@ -43,11 +43,32 @@ const urlRequestSchema = new mongoose.Schema({
 
 const UrlRequest = mongoose.model('UrlRequest', urlRequestSchema);
 
-// Middleware - Render compatible CORS
+// ✅ FIXED CORS CONFIGURATION
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-  credentials: true
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'https://eclectic-toffee-e21fd7.netlify.app',
+      'http://localhost:5173',
+     
+    ];
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      // Allow any origin during development
+      callback(null, true);
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
+
+
 app.use(express.json());
 
 // Multer for file uploads
@@ -87,7 +108,7 @@ function setupServiceAccount() {
   return null;
 }
 
-// Routes (same as your existing routes)
+// Routes
 app.post('/api/submit-url', async (req, res) => {
   try {
     const { url } = req.body;
@@ -189,7 +210,7 @@ app.post('/api/upload-csv', upload.single('csvFile'), async (req, res) => {
   }
 });
 
-// Other routes (status, requests, stats, delete, health) - same as before
+// Other routes
 app.get('/api/status/:requestId', async (req, res) => {
   try {
     const { requestId } = req.params;
@@ -304,7 +325,7 @@ function runIndexingScript(csvFilename, requestId) {
       mode: 'text',
       pythonPath: pythonCommand,
       scriptPath: __dirname,
-      args: [csvFilename, accountPath], // Pass account path as argument
+      args: [csvFilename, accountPath],
       pythonOptions: ['-u']
     };
 
@@ -355,7 +376,6 @@ function runIndexingScript(csvFilename, requestId) {
         // Cleanup
         try {
           fs.unlinkSync(csvFilename);
-          // Temporary account file cleanup
           if (accountPath.includes('/tmp/')) {
             fs.unlinkSync(accountPath);
           }
@@ -375,7 +395,6 @@ async function useDemoMode(requestId, csvFilename) {
   try {
     const request = await UrlRequest.findOne({ requestId: requestId });
     if (request) {
-      // Simulate processing delay
       setTimeout(async () => {
         request.status = 'completed';
         request.results = {
@@ -388,7 +407,6 @@ async function useDemoMode(requestId, csvFilename) {
         await request.save();
         console.log('✅ Demo mode completed for request:', requestId);
         
-        // Clean up CSV file
         try {
           fs.unlinkSync(csvFilename);
         } catch (e) {
@@ -406,4 +424,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Backend Server running on port ${PORT}`);
   console.log(`📊 Health: /api/health`);
   console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔧 CORS: Enabled for all origins`);
 });
