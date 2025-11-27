@@ -1,0 +1,13 @@
+{
+  "ignore": [
+    "account*.json",
+    "data.csv", 
+    "single_url.csv",
+    "uploads/*",
+    "*.csv",
+    "*.json"
+  ],
+  "ext": "js,json",
+  "watch": ["server.js", "*.js"],
+  "exec": "node server.js"
+}

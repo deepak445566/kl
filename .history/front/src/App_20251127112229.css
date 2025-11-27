@@ -1,0 +1,23 @@
+.navbar-nav .btn-link {
+  color: rgba(255,255,255,.75) !important;
+  text-decoration: none;
+  border: none;
+}
+
+.navbar-nav .btn-link.active {
+  color: white !important;
+  font-weight: bold;
+}
+
+.navbar-nav .btn-link:hover {
+  color: white !important;
+}
+
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.table-responsive {
+  max-height: 600px;
+  overflow-y: auto;
+}
