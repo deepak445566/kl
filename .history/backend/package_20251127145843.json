@@ -5,9 +5,9 @@
   "main": "index.js",
   
   "scripts": {
-   "start": "node server.js",
-     
-    "prod": "node server.js",
+   start": "node server.js",
+     "dev": "nodemon server.js",
+    "prod": "node server.js"
     "dev": "nodemon --ignore 'account*.json' --ignore '*.csv' --ignore 'uploads/' server.js",
     "debug": "node --inspect server.js"
   }
